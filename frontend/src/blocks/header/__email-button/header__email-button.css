@@ -1,0 +1,10 @@
+.header__email-button {
+  display: flex;
+  align-items: center;
+}
+@media screen and (max-width: 767px) {
+  .header__email-button {
+    flex-direction: column;
+    margin: 40px 0;
+  }
+}

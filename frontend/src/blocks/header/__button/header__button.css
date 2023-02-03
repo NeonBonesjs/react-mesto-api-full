@@ -1,0 +1,17 @@
+.header__button {
+  text-decoration: none;
+  color: white;
+  border: none;
+  background: none;
+  padding: 0;
+  transition: opacity ease-in-out 0.4s;
+}
+.header__button:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+@media screen and (max-width: 550px) {
+  .header__button {
+    padding: 0 30px;
+  }
+}

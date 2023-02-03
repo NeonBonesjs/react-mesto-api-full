@@ -1,0 +1,13 @@
+.form-sing__input {
+  border: none;
+  border-bottom: 2px #cccccc solid;
+  background-color: black;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #cccccc;
+  margin-top: 30px;
+  padding-bottom: 10px;
+}
