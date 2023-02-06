@@ -53,6 +53,6 @@ class Auth {
   };
 }
 
-const auth = new Auth("http://localhost:3000/api");
+const auth = new Auth("http://api.mesto-neonbones.nomoredomainsclub.ru");
 
 export default auth;

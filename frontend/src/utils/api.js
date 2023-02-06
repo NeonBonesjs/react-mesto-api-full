@@ -1,7 +1,6 @@
 class Api {
-  constructor({ baseUrl, token }) {
+  constructor({ baseUrl }) {
     this._baseUrl = baseUrl;
-    this._token = token;
   }
 
   _getResponseData(res) {
@@ -15,7 +14,7 @@ class Api {
     return fetch(`${this._baseUrl}/users/me`, {
       credentials: 'include',
       headers: {
-        authorization: this._token,
+        authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     }).then((res) => this._getResponseData(res));
   };
@@ -24,7 +23,7 @@ class Api {
     return fetch(`${this._baseUrl}/cards`, {
       credentials: 'include',
       headers: {
-        authorization: this._token,
+        authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     }).then((res) => this._getResponseData(res));
   };
@@ -34,7 +33,7 @@ class Api {
       method: "PATCH",
       credentials: 'include',
       headers: {
-        authorization: this._token,
+        authorization: `Bearer ${localStorage.getItem('token')}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -49,7 +48,7 @@ class Api {
       method: "POST",
       credentials: 'include',
       headers: {
-        authorization: this._token,
+        authorization: `Bearer ${localStorage.getItem('token')}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -64,7 +63,7 @@ class Api {
       method: "DELETE",
       credentials: 'include',
       headers: {
-        authorization: this._token,
+        authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     }).then((res) => this._getResponseData(res));
   }
@@ -74,7 +73,7 @@ class Api {
       method: "PUT",
       credentials: 'include',
       headers: {
-        authorization: this._token,
+        authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     }).then((res) => this._getResponseData(res));
   };
@@ -84,7 +83,7 @@ class Api {
       method: "DELETE",
       credentials: 'include',
       headers: {
-        authorization: this._token,
+        authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     }).then((res) => this._getResponseData(res));
   };
@@ -98,7 +97,7 @@ class Api {
       method: "PATCH",
       credentials: 'include',
       headers: {
-        authorization: this._token,
+        authorization: `Bearer ${localStorage.getItem('token')}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -109,8 +108,7 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: "http://localhost:3000/api",
-  token: "2f4f6221-2bd1-4593-b371-8424249e75f7",
+  baseUrl: "http://api.mesto-neonbones.nomoredomainsclub.ru",
 });
 
 export default api;

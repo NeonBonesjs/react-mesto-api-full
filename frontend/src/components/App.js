@@ -87,7 +87,7 @@ class App extends React.Component {
 
         .then((res) => {
           this.setState({
-            cards: res,
+            cards: res.cards,
           });
         })
         .catch((err) => console.log(`Error: ${err}`));
@@ -107,7 +107,7 @@ class App extends React.Component {
 
   handleCardLike = (card) => {
     const isLiked = card.likes.some(
-      (i) => i._id === this.state.currentUser._id
+      (i) => i === this.state.currentUser._id
     );
     api
       .changeLikeCardStatus(card._id, isLiked)
@@ -166,7 +166,8 @@ class App extends React.Component {
         if (data.token) {
           localStorage.setItem("token", data.token);
           auth.getUserEmail(localStorage.getItem("token")).then((data) => {
-            this.setState({ email: data.data.email });
+            console.log(data);
+            this.setState({ email: data.email });
           });
         }
       })
@@ -201,7 +202,7 @@ class App extends React.Component {
       auth
         .getUserEmail(jwt)
         .then((res) => {
-          this.setState({ email: res.data.email });
+          this.setState({ email: res.email });
         })
         .then(() => {
           this.setState({ loggedIn: true });
