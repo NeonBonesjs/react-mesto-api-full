@@ -21,7 +21,7 @@ export default function Register(props) {
     props.onRegisterUser(email, pass);
   }
   if (props.loggedIn) {
-    return <Redirect to="/react-mesto-auth" />;
+    return <Redirect to="/" />;
   } else if (props.isLoginPage) {
     return <Redirect to="/sign-in" />;
   }

@@ -115,7 +115,7 @@ module.exports.login = (req, res, next) => {
         token,
         { maxAge: 3600000 * 24, httpOnly: true, sameSite: true },
       )
-        .send({ massege: 'Авторизация прошла успешно!' });
+        .send({ token });
     })
     .catch(next);
 };

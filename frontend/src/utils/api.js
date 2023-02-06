@@ -1,8 +1,7 @@
 class Api {
-  constructor({ baseUrl, token, groupId }) {
+  constructor({ baseUrl, token }) {
     this._baseUrl = baseUrl;
     this._token = token;
-    this._groupId = groupId;
   }
 
   _getResponseData(res) {
@@ -13,7 +12,8 @@ class Api {
   }
 
   getUserInfo = () => {
-    return fetch(`${this._baseUrl}/${this._groupId}/users/me`, {
+    return fetch(`${this._baseUrl}/users/me`, {
+      credentials: 'include',
       headers: {
         authorization: this._token,
       },
@@ -21,7 +21,8 @@ class Api {
   };
 
   getInitialCard = () => {
-    return fetch(`${this._baseUrl}/${this._groupId}/cards`, {
+    return fetch(`${this._baseUrl}/cards`, {
+      credentials: 'include',
       headers: {
         authorization: this._token,
       },
@@ -29,8 +30,9 @@ class Api {
   };
 
   editUserInfo = (data) => {
-    return fetch(`${this._baseUrl}/${this._groupId}/users/me`, {
+    return fetch(`${this._baseUrl}/users/me`, {
       method: "PATCH",
+      credentials: 'include',
       headers: {
         authorization: this._token,
         "Content-Type": "application/json",
@@ -43,8 +45,9 @@ class Api {
   };
 
   addNewCard = (data) => {
-    return fetch(`${this._baseUrl}/${this._groupId}/cards`, {
+    return fetch(`${this._baseUrl}/cards`, {
       method: "POST",
+      credentials: 'include',
       headers: {
         authorization: this._token,
         "Content-Type": "application/json",
@@ -57,8 +60,9 @@ class Api {
   };
 
   removeCard(id) {
-    return fetch(`${this._baseUrl}/${this._groupId}/cards/${id}`, {
+    return fetch(`${this._baseUrl}/cards/${id}`, {
       method: "DELETE",
+      credentials: 'include',
       headers: {
         authorization: this._token,
       },
@@ -66,8 +70,9 @@ class Api {
   }
 
   putLike = (id) => {
-    return fetch(`${this._baseUrl}/${this._groupId}/cards/${id}/likes`, {
+    return fetch(`${this._baseUrl}/cards/${id}/likes`, {
       method: "PUT",
+      credentials: 'include',
       headers: {
         authorization: this._token,
       },
@@ -75,8 +80,9 @@ class Api {
   };
 
   deleteLike = (id) => {
-    return fetch(`${this._baseUrl}/${this._groupId}/cards/${id}/likes`, {
+    return fetch(`${this._baseUrl}/cards/${id}/likes`, {
       method: "DELETE",
+      credentials: 'include',
       headers: {
         authorization: this._token,
       },
@@ -88,8 +94,9 @@ class Api {
   };
 
   editAvatar = (data) => {
-    return fetch(`${this._baseUrl}/${this._groupId}/users/me/avatar`, {
+    return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: "PATCH",
+      credentials: 'include',
       headers: {
         authorization: this._token,
         "Content-Type": "application/json",
@@ -102,9 +109,8 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: "https://mesto.nomoreparties.co/v1",
+  baseUrl: "http://localhost:3000/api",
   token: "2f4f6221-2bd1-4593-b371-8424249e75f7",
-  groupId: "cohort-49",
 });
 
 export default api;

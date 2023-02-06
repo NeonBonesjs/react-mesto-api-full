@@ -148,7 +148,7 @@ class App extends React.Component {
     auth
       .register(email, pass)
       .then((res) => {
-        this.props.history.push("/sign-in");
+        this.setState({ isLoginPage: true });
         this.setState({ isSucsess: true });
         this.setState({ isInfoTooltipOpen: true });
       })
@@ -259,7 +259,7 @@ class App extends React.Component {
               </Route> */}
               <ProtectedRoute
                 exact
-                path="/react-mesto-auth"
+                path="/"
                 loggedIn={this.state.loggedIn}
                 component={Main}
                 onEditAvatar={this.handleEditAvatarClick}
