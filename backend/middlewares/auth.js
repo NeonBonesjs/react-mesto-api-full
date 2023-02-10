@@ -17,7 +17,6 @@ module.exports = (req, res, next) => {
   //   throw new AuthorizationError('Необходима авторизация');
   // }
 
-  // const token = authorization.replace('Bearer ', '');
   let payload;
 
   try {

@@ -108,7 +108,7 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: "http://api.mesto-neonbones.nomoredomainsclub.ru",
+  baseUrl: "http://mesto-neonbones.nomoredomainsclub.ru/api",
 });
 
 export default api;
