@@ -1,6 +1,6 @@
-const CORS_WHITELIST = ['http://localhost:3001',
+const CORS_WHITELIST = [
   'http://api.mesto-neonbones.nomoredomainsclub.ru',
-  'http://localhost:3000',
+  'http://mesto-neonbones.nomoredomainsclub.ru',
 ];
 
 const corsOption = {
