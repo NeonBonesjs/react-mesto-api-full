@@ -1,5 +1,5 @@
 const CORS_WHITELIST = [
-  'http://api.mesto-neonbones.nomoredomainsclub.ru',
+  'https://mesto-neonbones.nomoredomainsclub.ru',
   'http://mesto-neonbones.nomoredomainsclub.ru',
 ];
 

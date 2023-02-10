@@ -166,7 +166,6 @@ class App extends React.Component {
         if (data.token) {
           localStorage.setItem("token", data.token);
           auth.getUserEmail(localStorage.getItem("token")).then((data) => {
-            console.log(data);
             this.setState({ email: data.email });
           });
         }
