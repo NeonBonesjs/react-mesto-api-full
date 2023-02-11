@@ -5,7 +5,7 @@
 <a href="158.160.38.19">158.160.38.19<a>
 
 # Frontend
-<a href="http://mesto-neonbones.nomoredomainsclub.ru/">фронтенд<a>
+<a href="https://mesto-neonbones.nomoredomainsclub.ru/">фронтенд<a>
 
 # Backend 
-<a href="http://api.mesto-neonbones.nomoredomainsclub.ru/">бэкенд<a>
+<a href="https://api.mesto-neonbones.nomoredomainsclub.ru/">бэкенд<a>

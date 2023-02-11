@@ -5,6 +5,7 @@ const CustomError = require('../error/CustomError');
 
 module.exports.getCard = (req, res, next) => {
   Card.find({})
+    .populate(['owner', 'likes'])
     .then((cards) => res.send({ cards }))
     .catch(next);
 };
@@ -16,7 +17,7 @@ module.exports.createCard = (req, res, next) => {
     .then(({
       // eslint-disable-next-line no-shadow
       likes, _id, name, link, owner, createdAt,
-    }) => res.send({
+    }) => res.status(201).send({
       likes, _id, name, link, owner, createdAt,
     }))
     .catch((err) => {
@@ -42,6 +43,7 @@ module.exports.deleteCard = (req, res, next) => {
 
 module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+    .populate(['owner', 'likes'])
     .orFail(new NotFoundError('Запрашиваемая карточка не найденa'))
     .then(({
       likes, _id, name, link, owner, createdAt,
@@ -53,6 +55,7 @@ module.exports.likeCard = (req, res, next) => {
 
 module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
+    .populate(['owner', 'likes'])
     .orFail(new NotFoundError('Запрашиваемая карточка не найденa'))
     .then(({
       likes, _id, name, link, owner, createdAt,

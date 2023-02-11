@@ -2,6 +2,7 @@
 const { NODE_ENV, JWT_SECRET } = process.env;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { default: mongoose } = require('mongoose');
 const User = require('../models/users');
 const NotFoundError = require('../error/NotFoundError');
 const ValidationError = require('../error/ValidationError');
@@ -13,21 +14,25 @@ module.exports.getUsers = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.getUserById = (req, res, next) => {
-  User.findById(req.params.userId)
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь по указанному _id не найден.');
-      }
-      res.send({
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-        _id: user._id,
-        email: user.email,
-      });
-    })
+function getUserData(id, req, res, next) {
+  User.findById(id)
+    .orFail(new NotFoundError('Пользователь по указанному _id не найден.'))
+    .then((user) => res.send({
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      _id: user._id,
+      email: user.email,
+    }))
     .catch(next);
+}
+
+module.exports.getUserById = (req, res, next) => {
+  getUserData(req.params.userId, req, res, next);
+};
+
+module.exports.getThisUserInfo = (req, res, next) => {
+  getUserData(req.user._id, req, res, next);
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -52,7 +57,7 @@ module.exports.createUser = (req, res, next) => {
       });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof mongoose.Error.ValidationError) {
         return next(new ValidationError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
       }
       if (err.name === 'MongoServerError' && err.code === 11000) {
@@ -62,9 +67,9 @@ module.exports.createUser = (req, res, next) => {
     });
 };
 
-module.exports.changeUserInfo = (req, res, next) => {
-  const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+function changeUserData(req, res, next, object) {
+  // const object = req.body;
+  User.findByIdAndUpdate(req.user._id, object, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь по указанному _id не найден.');
@@ -82,23 +87,16 @@ module.exports.changeUserInfo = (req, res, next) => {
       }
       return next(err);
     });
+}
+
+module.exports.changeUserInfo = (req, res, next) => {
+  const { name, about } = req.body;
+  changeUserData(req, res, next, { name, about });
 };
 
 module.exports.changeUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
-    .orFail(new NotFoundError('Пользователь по указанному _id не найден.'))
-    .then(({
-      name, about, avatar, _id,
-    }) => res.send({
-      name, about, avatar, _id,
-    }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return next(new ValidationError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
-      }
-      return next(err);
-    });
+  changeUserData(req, res, next, { avatar });
 };
 
 module.exports.login = (req, res, next) => {
@@ -110,25 +108,8 @@ module.exports.login = (req, res, next) => {
         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
         { expiresIn: '7d' },
       );
-      res.cookie(
-        'jwt',
-        token,
-        { maxAge: 3600000 * 24, httpOnly: true, sameSite: true },
-      )
+      res
         .send({ token });
     })
-    .catch(next);
-};
-
-module.exports.getThisUserInfo = (req, res, next) => {
-  User.findById(req.user._id)
-    .orFail(new NotFoundError('Пользователь по указанному _id не найден.'))
-    .then((user) => res.send({
-      name: user.name,
-      about: user.about,
-      avatar: user.avatar,
-      _id: user._id,
-      email: user.email,
-    }))
     .catch(next);
 };
