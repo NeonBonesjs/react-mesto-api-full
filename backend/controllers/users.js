@@ -24,7 +24,12 @@ function getUserData(id, req, res, next) {
       _id: user._id,
       email: user.email,
     }))
-    .catch(next);
+    .catch((err) => {
+      if (err instanceof mongoose.Error.CastError) {
+        return next(new ValidationError('Некорректный _id пользователя'));
+      }
+      return next(err);
+    });
 }
 
 module.exports.getUserById = (req, res, next) => {
@@ -82,8 +87,11 @@ function changeUserData(req, res, next, object) {
       });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err instanceof mongoose.Error.ValidationError) {
         return next(new ValidationError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
+      }
+      if (err instanceof mongoose.Error.CastError) {
+        return next(new ValidationError('Некорректный _id пользователя'));
       }
       return next(err);
     });

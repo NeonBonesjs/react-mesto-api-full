@@ -107,7 +107,7 @@ class App extends React.Component {
 
   handleCardLike = (card) => {
     const isLiked = card.likes.some(
-      (i) => i === this.state.currentUser._id
+      (i) => i._id === this.state.currentUser._id
     );
     api
       .changeLikeCardStatus(card._id, isLiked)

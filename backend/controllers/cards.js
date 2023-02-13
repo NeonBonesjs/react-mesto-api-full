@@ -1,3 +1,4 @@
+const { default: mongoose } = require('mongoose');
 const Card = require('../models/cards');
 const NotFoundError = require('../error/NotFoundError');
 const ValidationError = require('../error/ValidationError');
@@ -21,8 +22,8 @@ module.exports.createCard = (req, res, next) => {
       likes, _id, name, link, owner, createdAt,
     }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new ValidationError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
+      if (err instanceof mongoose.Error.ValidationError) {
+        return next(new ValidationError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
       }
       return next(err);
     });
@@ -38,11 +39,16 @@ module.exports.deleteCard = (req, res, next) => {
       return card.remove()
         .then(() => res.send({ message: 'Карточка удалена' }));
     })
-    .catch(next);
+    .catch((err) => {
+      if (err instanceof mongoose.Error.CastError) {
+        return next(new ValidationError('Некорректный _id карточки'));
+      }
+      return next(err);
+    });
 };
 
-module.exports.likeCard = (req, res, next) => {
-  Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+function changeLikeStatus(req, res, next, param) {
+  Card.findByIdAndUpdate(req.params.cardId, param, { new: true })
     .populate(['owner', 'likes'])
     .orFail(new NotFoundError('Запрашиваемая карточка не найденa'))
     .then(({
@@ -50,17 +56,18 @@ module.exports.likeCard = (req, res, next) => {
     }) => res.send({
       likes, _id, name, link, owner, createdAt,
     }))
-    .catch(next);
+    .catch((err) => {
+      if (err instanceof mongoose.Error.CastError) {
+        return next(new ValidationError('Некорректный _id карточки'));
+      }
+      return next(err);
+    });
+}
+
+module.exports.likeCard = (req, res, next) => {
+  changeLikeStatus(req, res, next, { $addToSet: { likes: req.user._id } });
 };
 
 module.exports.dislikeCard = (req, res, next) => {
-  Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
-    .populate(['owner', 'likes'])
-    .orFail(new NotFoundError('Запрашиваемая карточка не найденa'))
-    .then(({
-      likes, _id, name, link, owner, createdAt,
-    }) => res.send({
-      likes, _id, name, link, owner, createdAt,
-    }))
-    .catch(next);
+  changeLikeStatus(req, res, next, { $pull: { likes: req.user._id } });
 };

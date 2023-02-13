@@ -15,7 +15,8 @@ export default class Card extends React.Component {
     this.props.onCardDelete(this.props.card);
   };
   render() {
-    this.isOwn = this.props.card.owner === this.context._id;
+    this.isOwn = this.props.card.owner._id === this.context._id;
+    console.log(this.props.card.likes)
     return (
       <div className="element">
         <img
@@ -29,7 +30,7 @@ export default class Card extends React.Component {
           <div className="element__like-plus-number">
             <button
               className={`element__like-button ${
-                this.props.card.likes.some((i) => i === this.context._id)
+                this.props.card.likes.some((i) => i._id === this.context._id)
                   ? "element__like-button_active"
                   : ""
               }`}
